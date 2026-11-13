@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salvador Saura Vidal | Backend Software Engineer</title>
+    <meta name="description" content="Ingeniero de Software Backend con más de 4 años de experiencia construyendo sistemas críticos de alta disponibilidad en Java (Spring Boot) y .NET (C#, ASP.NET).">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Scrollbar & Subtle Grid Background */
+        .bg-grid-pattern {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+        }
+        .dark .bg-grid-pattern {
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Print optimization for PDF generation */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .print-break-inside-avoid {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased transition-colors duration-300 bg-grid-pattern min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <!-- Toast Notification for Clipboard Copy -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white shadow-xl border border-slate-700 dark:border-indigo-400">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 dark:text-white"></i>
+        <span id="toast-message" class="text-sm font-medium">¡Correo copiado al portapapeles!</span>
+    </div>
+
+    <!-- Sticky Navigation Bar -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-white/80 dark:bg-slate-950/80 border-b border-slate-200/80 dark:border-slate-800/80 transition-colors no-print">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand / Terminal Monogram -->
+            <a href="#top" class="flex items-center gap-2.5 group focus:outline-none">
+                <div class="w-9 h-9 rounded-lg bg-indigo-600/10 dark:bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-mono font-bold text-sm group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                    &gt;SS_
+                </div>
+                <span class="font-bold tracking-tight text-slate-900 dark:text-white hidden sm:inline-block">Salvador Saura</span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300">
+                <a href="#stack" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-i18n="navStack">Stack</a>
+                <a href="#experience" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-i18n="navExperience">Experiencia</a>
+                <a href="#projects" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-i18n="navProjects">Proyectos</a>
+                <a href="#education" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors" data-i18n="navEducation">Formación</a>
+            </nav>
+
+            <!-- Action Controls: Lang Switcher & Theme Toggle -->
+            <div class="flex items-center gap-2.5">
+                <!-- Language Switcher (ES / EN) -->
+                <div class="inline-flex rounded-lg p-0.5 bg-slate-200/70 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-800">
+                    <button id="btn-lang-es" onclick="setLanguage('es')" class="px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all bg-white dark:bg-indigo-600 text-slate-900 dark:text-white shadow-sm">
+                        ES
+                    </button>
+                    <button id="btn-lang-en" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                        EN
+                    </button>
+                </div>
+
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema" class="p-2 rounded-lg bg-slate-200/70 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+                </button>
+
+                <!-- Print / Save PDF Button -->
+                <button onclick="window.print()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-indigo-600 dark:hover:bg-indigo-400 dark:hover:text-white transition-colors shadow-sm">
+                    <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+                    <span data-i18n="btnPrint">Imprimir / PDF</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="top" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-20">
+
+        <!-- ================= HERO SECTION ================= -->
+        <section class="relative">
+            <!-- Subtle Ambient Glow -->
+            <div class="absolute -top-12 -left-12 w-72 h-72 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-3xl pointer-events-none no-print"></div>
+            <div class="absolute top-12 right-4 w-64 h-64 bg-emerald-500/10 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none no-print"></div>
+
+            <div class="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm">
+                <div class="flex flex-col-reverse md:flex-row md:items-center justify-between gap-8">
+                    <div class="space-y-4 max-w-2xl">
+                        <!-- Status / Availability Pill -->
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>Java (Spring Boot) &bull; .NET (C#, ASP.NET) &bull; High-Availability</span>
+                        </div>
+
+                        <!-- Name & Role -->
+                        <div>
+                            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+                                Salvador Saura Vidal
+                            </h1>
+                            <p class="mt-2 text-xl sm:text-2xl font-semibold text-indigo-600 dark:text-indigo-400" data-i18n="heroRole">
+                                Ingeniero de Software Backend
+                            </p>
+                        </div>
+
+                        <!-- Location & Quick Info -->
+                        <div class="flex flex-wrap items-center gap-y-2 gap-x-5 text-sm text-slate-600 dark:text-slate-400">
+                            <span class="inline-flex items-center gap-1.5">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-indigo-500"></i>
+                                <span data-i18n="heroLocation">Rojales, Alicante</span>
+                            </span>
+                            <a href="mailto:salvasauvi@gmail.com" class="inline-flex items-center gap-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                                <i data-lucide="mail" class="w-4 h-4 text-indigo-500"></i>
+                                <span>salvasauvi@gmail.com</span>
+                            </a>
+                        </div>
+
+                        <!-- Bio / Executive Summary (Exact CV wording) -->
+                        <div class="pt-2 space-y-3 text-slate-600 dark:text-slate-300 leading-relaxed text-base">
+                            <p data-i18n="heroBio1">
+                                Ingeniero de Software Backend con más de 4 años de experiencia construyendo sistemas críticos de alta disponibilidad en los ecosistemas Java (Spring Boot) y .NET (C#, ASP.NET).
+                            </p>
+                            <p data-i18n="heroBio2">
+                                Acostumbrado a trabajar en entornos donde el código procesa más de un millón de transacciones diarias, me enfoco en diseñar arquitecturas limpias, automatizar procesos complejos y garantizar la estabilidad en producción mediante testing riguroso (JUnit, Mockito) e integración continua.
+                            </p>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="pt-4 flex flex-wrap items-center gap-3 no-print">
+                            <a href="https://linkedin.com/in/salvador-saura" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm shadow-indigo-500/20 transition-all">
+                                <i data-lucide="linkedin" class="w-4 h-4"></i>
+                                <span>LinkedIn</span>
+                                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 opacity-80"></i>
+                            </a>
+
+                            <button onclick="copyEmail()" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 transition-all">
+                                <i data-lucide="copy" class="w-4 h-4 text-indigo-500"></i>
+                                <span data-i18n="btnCopyEmail">Copiar Email</span>
+                            </button>
+
+                            <a href="#projects" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border border-slate-200/80 dark:border-slate-700 transition-all">
+                                <i data-lucide="smartphone" class="w-4 h-4 text-emerald-500"></i>
+                                <span>Gasolinapp</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Profile Photo Frame -->
+                    <div class="shrink-0 flex flex-col items-center md:items-end">
+                        <div class="relative group">
+                            <!-- Decorative Gradient Ring -->
+                            <div class="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-indigo-500 via-indigo-400 to-emerald-400 opacity-70 blur-sm group-hover:opacity-100 transition duration-300 no-print"></div>
+                            
+                            <!-- Avatar Container -->
+                            <div class="relative w-36 h-36 sm:w-44 sm:h-44 md:w-48 md:h-48 rounded-3xl overflow-hidden bg-slate-200 dark:bg-slate-800 border-2 border-white dark:border-slate-900 shadow-xl">
+                                <img 
+                                    id="profile-img"
+                                    src="foto_perfil.jpg" 
+                                    alt="Salvador Saura Vidal" 
+                                    class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                                    onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e1b4b/e0e7ff?text=SS'; document.getElementById('photo-upload-hint').classList.remove('hidden');"
+                                >
+
+                                <!-- Interactive Overlay to preview local image right inside the browser -->
+                                <label for="avatar-input" class="no-print absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white text-xs font-medium cursor-pointer p-3 text-center">
+                                    <i data-lucide="camera" class="w-6 h-6 mb-1 text-indigo-400"></i>
+                                    <span data-i18n="btnChangePhoto">Previsualizar foto local</span>
+                                </label>
+                                <input id="avatar-input" type="file" accept="image/*" class="hidden" onchange="previewProfileImage(event)">
+                            </div>
+                        </div>
+
+                        <!-- Subtle helper button if image is not yet in the same folder -->
+                        <label id="photo-upload-hint" for="avatar-input" class="hidden no-print mt-2.5 inline-flex items-center gap-1.5 text-xs font-mono text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer">
+                            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                            <span data-i18n="btnLoadPhotoHint">Cargar MVIMG_20261113_122537.jpg</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Key Career Highlight -->
+                <div class="mt-8 pt-6 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center">
+                    <div class="inline-flex items-center gap-4 px-5 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/60 dark:border-slate-800/80">
+                        <div class="text-2xl sm:text-3xl font-extrabold font-mono text-indigo-600 dark:text-indigo-400">+4</div>
+                        <div class="text-sm font-medium text-slate-700 dark:text-slate-300" data-i18n="metricExp">Años de experiencia Backend</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TECH STACK SECTION ================= -->
+        <section id="stack" class="scroll-mt-24 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold">
+                        <i data-lucide="cpu" class="w-4 h-4"></i>
+                        <span data-i18n="stackSubtitle">Arquitectura & Herramientas</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1" data-i18n="stackTitle">
+                        Stack Tecnológico
+                    </h2>
+                </div>
+
+                <!-- Category Filter Pills -->
+                <div class="flex flex-wrap gap-1.5 no-print" id="stack-filters">
+                    <button onclick="filterStack('all')" data-filter="all" class="stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm" data-i18n="filterAll">
+                        Todos
+                    </button>
+                    <button onclick="filterStack('backend')" data-filter="backend" class="stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-500">
+                        Backend
+                    </button>
+                    <button onclick="filterStack('data')" data-filter="data" class="stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-500" data-i18n="filterData">
+                        Datos / ORM
+                    </button>
+                    <button onclick="filterStack('testing')" data-filter="testing" class="stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-500">
+                        Testing
+                    </button>
+                    <button onclick="filterStack('devops')" data-filter="devops" class="stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-500">
+                        Cloud / DevOps
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stack Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="stack-grid">
+                <!-- Backend Category -->
+                <div data-category="backend" class="stack-card bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                            <i data-lucide="server" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white">Backend</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="stackBackendDesc">Sistemas de alta disponibilidad & microservicios</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60">Java</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60">Spring Boot</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60">C#</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60">.NET / ASP.NET Core</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Kotlin</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Node.js</span>
+                    </div>
+                </div>
+
+                <!-- Databases / Datos Category -->
+                <div data-category="data" class="stack-card bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                            <i data-lucide="database" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white" data-i18n="stackDataTitle">Datos & Persistencia</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="stackDataDesc">Bases de datos relacionales, ORMs y optimización</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">SQL Server</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">PostgreSQL</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">Informix</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Entity Framework</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Hibernate</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">LINQ</span>
+                    </div>
+                </div>
+
+                <!-- Testing Category -->
+                <div data-category="testing" class="stack-card bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white">Testing & Calidad</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="stackTestingDesc">Estabilidad en producción y pruebas unitarias</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60">JUnit</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800/60">Mockito</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">SonarQube</span>
+                    </div>
+                </div>
+
+                <!-- Cloud / DevOps Category -->
+                <div data-category="devops" class="stack-card bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2.5 rounded-xl bg-sky-500/10 text-sky-600 dark:text-sky-400">
+                            <i data-lucide="cloud-cog" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 dark:text-white">Cloud / DevOps</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="stackDevopsDesc">Integración continua, contenedores y control de calidad</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">Azure</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-sky-50 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300 border border-sky-200/60 dark:border-sky-800/60">Docker</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Git</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">GitLab</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">SonarQube</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">CI/CD</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PROFESSIONAL EXPERIENCE SECTION ================= -->
+        <section id="experience" class="scroll-mt-24 space-y-8">
+            <div>
+                <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold">
+                    <i data-lucide="briefcase" class="w-4 h-4"></i>
+                    <span data-i18n="expSubtitle">Trayectoria</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1" data-i18n="expTitle">
+                    Experiencia Profesional
+                </h2>
+            </div>
+
+            <!-- Vertical Timeline -->
+            <div class="relative border-l-2 border-indigo-500/30 dark:border-indigo-500/40 ml-3 sm:ml-6 pl-6 sm:pl-8 space-y-10">
+
+                <!-- Role 1: Accelya -->
+                <article class="relative group print-break-inside-avoid">
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 dark:bg-indigo-400 ring-4 ring-slate-50 dark:ring-slate-950"></div>
+
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm hover:border-indigo-500/40 transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+                            <div>
+                                <div class="flex items-center gap-2.5 flex-wrap">
+                                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white" data-i18n="exp1Role">
+                                        Ingeniero de Software
+                                    </h3>
+                                    <span class="text-indigo-600 dark:text-indigo-400 font-semibold">@ Accelya</span>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50 w-fit" data-i18n="exp1Date">
+                                Octubre 2022 - Julio 2026
+                            </span>
+                        </div>
+
+                        <ul class="mt-4 space-y-3 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp1Bullet1">Desarrollé y mantuve una plataforma de pagos crítica para el sector aéreo utilizando Java, ASP.NET e Informix, soportando un volumen superior a 1 millón de transacciones diarias en arquitecturas de microservicios.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp1Bullet2">Diseñé e implementé un módulo de conciliación de ventas (Java Spring Boot, Hibernate y SQL Server integrados con una API REST en .NET Framework y Entity Framework bajo arquitectura en capas), logrando detectar y subsanar incidencias contables antes de la confirmación bancaria.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp1Bullet3">Lideré la adecuación técnica del sistema a la normativa GDPR, creando procesos automáticos de retención, anonimización y borrado seguro para millones de registros históricos acumulados durante más de 12 años.</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Java</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Spring Boot</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">ASP.NET / .NET Framework</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Hibernate</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Entity Framework</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">SQL Server</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Informix</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">GDPR</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Role 2: Capgemini (Full Stack Developer) -->
+                <article class="relative group print-break-inside-avoid">
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-indigo-500 transition-colors ring-4 ring-slate-50 dark:ring-slate-950"></div>
+
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm hover:border-indigo-500/40 transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+                            <div>
+                                <div class="flex items-center gap-2.5 flex-wrap">
+                                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white" data-i18n="exp2Role">
+                                        Desarrollador Full Stack
+                                    </h3>
+                                    <span class="text-indigo-600 dark:text-indigo-400 font-semibold">@ Capgemini</span>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 w-fit" data-i18n="exp2Date">
+                                Marzo 2022 - Octubre 2022
+                            </span>
+                        </div>
+
+                        <ul class="mt-4 space-y-3 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp2Bullet1">Desarrollé y mantuve aplicaciones críticas para el sector sanitario con Node.js y Angular, dando soporte estable a cientos de usuarios concurrentes.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp2Bullet2">Automaticé la monitorización continua de servicios mediante scripts en PowerShell, logrando detectar de forma anticipada 8 de cada 10 incidencias antes de que afectasen al usuario final y mejorando la disponibilidad del sistema.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp2Bullet3">Lideré la toma de requisitos funcionales y la presentación de demos técnicas ante el cliente final, consiguiendo la aprobación del 100% de las propuestas entregadas.</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Node.js</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Angular</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">PowerShell</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Role 3: Capgemini (Software Development Intern) -->
+                <article class="relative group print-break-inside-avoid">
+                    <!-- Timeline Dot -->
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-indigo-500 transition-colors ring-4 ring-slate-50 dark:ring-slate-950"></div>
+
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm hover:border-indigo-500/40 transition-all">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+                            <div>
+                                <div class="flex items-center gap-2.5 flex-wrap">
+                                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white" data-i18n="exp3Role">
+                                        Prácticas en desarrollo de Software
+                                    </h3>
+                                    <span class="text-indigo-600 dark:text-indigo-400 font-semibold">@ Capgemini</span>
+                                </div>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-mono font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 w-fit" data-i18n="exp3Date">
+                                Noviembre 2021 - Febrero 2022
+                            </span>
+                        </div>
+
+                        <ul class="mt-4 space-y-3 text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp3Bullet1">Optimicé consultas complejas en SQL Server utilizando LINQ y Entity Framework, reduciendo los tiempos de respuesta de la aplicación de 3 segundos a 800 milisegundos.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp3Bullet2">Refactoricé procesos críticos de backend en .NET Core 3, utilizando SonarQube para el control de calidad mejorando la mantenibilidad del código y reduciendo la deuda técnica del proyecto.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-indigo-500 shrink-0 mt-1"></i>
+                                <span data-i18n="exp3Bullet3">Implementé mejoras evolutivas combinando el desarrollo en un backend .NET Core 3 participando en tareas del frontend con React JS y despliegues con Azure DevOps.</span>
+                            </li>
+                        </ul>
+
+                        <div class="mt-5 pt-4 border-t border-slate-100 dark:border-slate-800/60 flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">.NET Core 3</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">SQL Server</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">LINQ</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Entity Framework</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">SonarQube</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">React JS</span>
+                            <span class="px-2.5 py-0.5 rounded-md text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Azure DevOps</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ================= PERSONAL PROJECTS SECTION ================= -->
+        <section id="projects" class="scroll-mt-24 space-y-6 print-break-inside-avoid">
+            <div>
+                <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-semibold">
+                    <i data-lucide="rocket" class="w-4 h-4"></i>
+                    <span data-i18n="projSubtitle">En Producción</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1" data-i18n="projTitle">
+                    Proyectos Personales
+                </h2>
+            </div>
+
+            <!-- Featured Project Card: Gasolinapp -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white border border-slate-800 p-6 sm:p-8 shadow-lg">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-800">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+                        <!-- Gasolinapp App Icon Container -->
+                        <div class="relative group shrink-0">
+                            <div class="w-20 h-20 rounded-2xl bg-white p-1.5 shadow-xl border border-slate-200/80 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+                                <!-- Primary Image pointing to logo_gasolinapp_2.png -->
+                                <img 
+                                    id="gasolinapp-logo-img"
+                                    src="logo_gasolinapp.png" 
+                                    alt="Gasolinapp Logo" 
+                                    class="w-full h-full object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
+                                    onerror="this.classList.add('hidden'); document.getElementById('gasolinapp-svg-fallback').classList.remove('hidden');"
+                                >
+                                <!-- High-Precision Inline SVG Replica Fallback (Blue 'G' + Fuel Pump + Light-Blue Droplet) -->
+                                <svg id="gasolinapp-svg-fallback" class="hidden w-full h-full" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Gasolinapp Logo">
+                                    <defs>
+                                        <linearGradient id="gasolinappBlueGrad" x1="25" y1="175" x2="175" y2="25" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0%" stop-color="#0d2f81"/>
+                                            <stop offset="55%" stop-color="#1e56b5"/>
+                                            <stop offset="100%" stop-color="#3b82d6"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Outer Circular 'G' with bottom gap -->
+                                    <path d="M 145 55 A 68 68 0 1 0 118 165" stroke="url(#gasolinappBlueGrad)" stroke-width="26" stroke-linecap="butt" />
+                                    <!-- Right 'G' crossbar and lower curve -->
+                                    <path d="M 118 106 H 163 V 112 A 66 66 0 0 1 131 159" stroke="url(#gasolinappBlueGrad)" stroke-width="26" stroke-linecap="butt" stroke-linejoin="round" />
+                                    <!-- Fuel Pump Body -->
+                                    <rect x="81" y="75" width="34" height="62" rx="6" fill="url(#gasolinappBlueGrad)" />
+                                    <!-- Fuel Pump Screen -->
+                                    <rect x="87" y="81" width="22" height="14" rx="2" fill="#ffffff" />
+                                    <!-- Fuel Hose & Nozzle on Left -->
+                                    <path d="M 81 106 H 76 V 124 A 4.5 4.5 0 0 1 67 124 V 97 L 75 86 L 78 88 L 73 97 V 123" stroke="url(#gasolinappBlueGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                                    <path d="M 67 95 L 75 85 L 78 90 L 71 99 Z" fill="url(#gasolinappBlueGrad)" />
+                                    <!-- Light Blue Fuel Droplet inside Pump -->
+                                    <path d="M 98 104 C 98 104 107 115 107 121 A 9 9 0 1 1 89 121 C 89 115 98 104 98 104 Z" fill="#d9f2ff" />
+                                    <!-- Subtle Black Highlight Curve on Droplet -->
+                                    <path d="M 103 122 A 5 5 0 0 1 98 127" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" />
+                                </svg>
+
+                                <!-- Interactive Overlay to preview local logo file -->
+                                <label for="gasolinapp-logo-input" class="no-print absolute inset-0 rounded-2xl bg-slate-950/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white text-[10px] font-medium cursor-pointer p-1.5 text-center leading-tight">
+                                    <i data-lucide="image-plus" class="w-4 h-4 mb-1 text-emerald-400"></i>
+                                    <span data-i18n="btnChangeLogo">Cargar logo</span>
+                                </label>
+                                <input id="gasolinapp-logo-input" type="file" accept="image/*" class="hidden" onchange="previewGasolinappLogo(event)">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex flex-wrap items-center gap-3">
+                                <span class="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" data-i18n="projDownloads">
+                                    +200 descargas activas
+                                </span>
+                                <span class="px-3 py-1 rounded-full text-xs font-mono font-medium bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+                                    ES &bull; FR &bull; PT &bull; DE
+                                </span>
+                            </div>
+                            <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight flex flex-wrap items-baseline gap-x-3 gap-y-1 pt-1">
+                                <span>Gasolinapp</span>
+                                <span class="text-sm sm:text-base font-normal text-slate-400" data-i18n="projRole">| Creador y Desarrollador app Kotlin</span>
+                            </h3>
+                        </div>
+                    </div>
+
+                    <!-- Google Play Store Link (Replace href with exact Google Play package URL if desired) -->
+                    <a href="https://play.google.com/store/search?q=Gasolinapp&c=apps" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all w-fit shrink-0 shadow-lg shadow-emerald-500/20 no-print">
+                        <i data-lucide="play" class="w-4 h-4 fill-current"></i>
+                        <span data-i18n="projBtnPlay">Ver en Google Play</span>
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Project Details -->
+                <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 space-y-3.5 text-slate-300 text-sm sm:text-base leading-relaxed">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="layers" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <p data-i18n="projBullet1">
+                                Diseñé y desarrollé una aplicación en producción para la consulta y comparación en tiempo real de precios de carburantes en España, Francia, Portugal y Alemania (+200 descargas activas).
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="database-zap" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <p data-i18n="projBullet2">
+                                Implementé procesos automatizados de ingesta, normalización y actualización de datos masivos procedentes de APIs y fuentes gubernamentales oficiales de 4 países sobre una base de datos relacional en PostgreSQL.
+                            </p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="route" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <p data-i18n="projBullet3">
+                                Desarrollé en Kotlin un motor de búsqueda por municipios y rutas con agrupación dinámica (clustering), cálculo algorítmico de precios por zonas, aplicación de descuentos personalizados y sistema de alertas automáticas ante bajadas de precio.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Architecture Highlights Box -->
+                    <div class="bg-slate-950/60 border border-slate-800/90 rounded-xl p-5 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-xs font-mono uppercase tracking-wider text-slate-400 mb-3" data-i18n="projTechHeader">
+                                Arquitectura & Tecnologías
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Kotlin</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PostgreSQL</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-800 text-slate-300">ETL / Data Ingestion</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-800 text-slate-300">Gov REST APIs</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-800 text-slate-300">Dynamic Clustering</span>
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-800 text-slate-300">Push Alerts</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400 font-mono">
+                            <span data-i18n="projCountriesLabel">Cobertura Europea</span>
+                            <span class="text-emerald-400 font-semibold">4 APIs Oficiales</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= EDUCATION, CERTIFICATIONS & LANGUAGES ================= -->
+        <section id="education" class="scroll-mt-24 space-y-6 print-break-inside-avoid">
+            <div>
+                <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-semibold">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                    <span data-i18n="eduSubtitle">Credenciales Académicas</span>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-1" data-i18n="eduTitle">
+                    Educación, Certificaciones e Idiomas
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Education Card (Spans 2 columns on desktop) -->
+                <div class="md:col-span-2 bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 sm:p-7 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-lg border border-indigo-200/50 dark:border-indigo-800/50" data-i18n="eduDate">
+                                Septiembre 2017 - Julio 2022
+                            </span>
+                            <span class="text-xs font-mono text-slate-500 dark:text-slate-400">Murcia, ES</span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-slate-900 dark:text-white" data-i18n="eduDegree">
+                            Grado en Ingeniería Informática
+                        </h3>
+                        <p class="text-slate-600 dark:text-slate-400 font-medium mt-1">
+                            Universidad de Murcia
+                        </p>
+                    </div>
+
+                    <!-- Honors Highlight Box -->
+                    <div class="mt-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+                        <i data-lucide="award" class="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5"></i>
+                        <div class="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
+                            <strong class="font-semibold text-amber-700 dark:text-amber-300" data-i18n="eduHonorsLabel">Menciones de Honor:</strong>
+                            <span data-i18n="eduHonorsText"> Matrícula de Honor en Compiladores y en Estructura y Tecnología de Computadores.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications & Languages Column -->
+                <div class="space-y-5">
+                    <!-- Certification Card -->
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2 rounded-lg bg-sky-500/10 text-sky-600 dark:text-sky-400">
+                                <i data-lucide="badge-check" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 dark:text-white" data-i18n="certTitle">Certificaciones</h3>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200/70 dark:border-slate-800">
+                            <div class="text-xs font-mono font-bold text-sky-600 dark:text-sky-400">MICROSOFT AZURE</div>
+                            <div class="text-sm font-semibold text-slate-900 dark:text-white mt-0.5">AZ-900 Microsoft Azure Fundamentals</div>
+                        </div>
+                    </div>
+
+                    <!-- Languages Card -->
+                    <div class="bg-white dark:bg-slate-900/90 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                                <i data-lucide="languages" class="w-5 h-5"></i>
+                            </div>
+                            <h3 class="font-bold text-slate-900 dark:text-white" data-i18n="langTitle">Idiomas</h3>
+                        </div>
+                        <div class="space-y-2.5 text-sm">
+                            <div class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800">
+                                <span class="font-medium text-slate-800 dark:text-slate-200" data-i18n="langEsName">Español</span>
+                                <span class="text-xs font-mono px-2.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-semibold" data-i18n="langEsLevel">Nativo</span>
+                            </div>
+                            <div class="flex items-center justify-between py-1.5">
+                                <span class="font-medium text-slate-800 dark:text-slate-200" data-i18n="langEnName">Inglés</span>
+                                <span class="text-xs font-mono px-2.5 py-0.5 rounded-md bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 font-semibold" data-i18n="langEnLevel">B2 - Profesional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="border-t border-slate-200/80 dark:border-slate-800/80 bg-white/50 dark:bg-slate-950/50 py-10 mt-16 no-print">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-2">
+                <span class="font-mono font-bold text-indigo-600 dark:text-indigo-400">&gt;SS_</span>
+                <span>Salvador Saura Vidal &bull; Backend Software Engineer</span>
+            </div>
+            <div class="flex items-center gap-5">
+                <a href="mailto:salvasauvi@gmail.com" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">salvasauvi@gmail.com</a>
+                <a href="https://linkedin.com/in/salvador-saura" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">LinkedIn</a>
+                <a href="#top" class="inline-flex items-center gap-1 text-xs font-mono text-indigo-600 dark:text-indigo-400 hover:underline">
+                    <span>Top</span>
+                    <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= INTERACTIVE SCRIPTS ================= -->
+    <script>
+        // Exact translations extracted directly from CV_SalvadorSaura_ES.pdf and CV_SalvadorSaura_EN.pdf
+        const translations = {
+            es: {
+                navStack: "Stack",
+                navExperience: "Experiencia",
+                navProjects: "Proyectos",
+                navEducation: "Formación",
+                btnPrint: "Imprimir / PDF",
+                heroRole: "Ingeniero de Software Backend",
+                heroLocation: "Rojales, Alicante",
+                heroBio1: "Ingeniero de Software Backend con más de 4 años de experiencia construyendo sistemas críticos de alta disponibilidad en los ecosistemas Java (Spring Boot) y .NET (C#, ASP.NET).",
+                heroBio2: "Acostumbrado a trabajar en entornos donde el código procesa más de un millón de transacciones diarias, me enfoco en diseñar arquitecturas limpias, automatizar procesos complejos y garantizar la estabilidad en producción mediante testing riguroso (JUnit, Mockito) e integración continua.",
+                btnCopyEmail: "Copiar Email",
+                btnChangePhoto: "Previsualizar foto local",
+                btnLoadPhotoHint: "Seleccionar tu foto para previsualizar",
+                btnChangeLogo: "Cargar logo",
+                metricExp: "Años de experiencia Backend",
+                metricTx: "Transacciones diarias procesadas",
+                metricOpt: "Optimización de respuesta SQL",
+                metricIncidents: "Incidencias detectadas con antelación",
+                stackSubtitle: "Arquitectura & Herramientas",
+                stackTitle: "Stack Tecnológico",
+                filterAll: "Todos",
+                filterData: "Datos / ORM",
+                stackBackendDesc: "Sistemas de alta disponibilidad & microservicios",
+                stackDataTitle: "Datos & Persistencia",
+                stackDataDesc: "Bases de datos relacionales, ORMs y optimización",
+                stackTestingDesc: "Estabilidad en producción y pruebas unitarias",
+                stackDevopsDesc: "Integración continua, contenedores y control de calidad",
+                expSubtitle: "Trayectoria",
+                expTitle: "Experiencia Profesional",
+                exp1Role: "Ingeniero de Software",
+                exp1Date: "Octubre 2022 - Julio 2026",
+                exp1Bullet1: "Desarrollé y mantuve una plataforma de pagos crítica para el sector aéreo utilizando Java, ASP.NET e Informix, soportando un volumen superior a 1 millón de transacciones diarias en arquitecturas de microservicios.",
+                exp1Bullet2: "Diseñé e implementé un módulo de conciliación de ventas (Java Spring Boot, Hibernate y SQL Server integrados con una API REST en .NET Framework y Entity Framework bajo arquitectura en capas), logrando detectar y subsanar incidencias contables antes de la confirmación bancaria.",
+                exp1Bullet3: "Lideré la adecuación técnica del sistema a la normativa GDPR, creando procesos automáticos de retención, anonimización y borrado seguro para millones de registros históricos acumulados durante más de 12 años.",
+                exp2Role: "Desarrollador Full Stack",
+                exp2Date: "Marzo 2022 - Octubre 2022",
+                exp2Bullet1: "Desarrollé y mantuve aplicaciones críticas para el sector sanitario con Node.js y Angular, dando soporte estable a cientos de usuarios concurrentes.",
+                exp2Bullet2: "Automaticé la monitorización continua de servicios mediante scripts en PowerShell, logrando detectar de forma anticipada 8 de cada 10 incidencias antes de que afectasen al usuario final y mejorando la disponibilidad del sistema.",
+                exp2Bullet3: "Lideré la toma de requisitos funcionales y la presentación de demos técnicas ante el cliente final, consiguiendo la aprobación del 100% de las propuestas entregadas.",
+                exp3Role: "Prácticas en desarrollo de Software",
+                exp3Date: "Noviembre 2021 - Febrero 2022",
+                exp3Bullet1: "Optimicé consultas complejas en SQL Server utilizando LINQ y Entity Framework, reduciendo los tiempos de respuesta de la aplicación de 3 segundos a 800 milisegundos.",
+                exp3Bullet2: "Refactoricé procesos críticos de backend en .NET Core 3, utilizando SonarQube para el control de calidad mejorando la mantenibilidad del código y reduciendo la deuda técnica del proyecto.",
+                exp3Bullet3: "Implementé mejoras evolutivas combinando el desarrollo en un backend .NET Core 3 participando en tareas del frontend con React JS y despliegues con Azure DevOps.",
+                projSubtitle: "En Producción",
+                projTitle: "Proyectos Personales",
+                projDownloads: "+200 descargas activas",
+                projRole: "| Creador y Desarrollador app Kotlin",
+                projBtnPlay: "Ver en Google Play",
+                projBullet1: "Diseñé y desarrollé una aplicación en producción para la consulta y comparación en tiempo real de precios de carburantes en España, Francia, Portugal y Alemania (+200 descargas activas).",
+                projBullet2: "Implementé procesos automatizados de ingesta, normalización y actualización de datos masivos procedentes de APIs y fuentes gubernamentales oficiales de 4 países sobre una base de datos relacional en PostgreSQL.",
+                projBullet3: "Desarrollé en Kotlin un motor de búsqueda por municipios y rutas con agrupación dinámica (clustering), cálculo algorítmico de precios por zonas, aplicación de descuentos personalizados y sistema de alertas automáticas ante bajadas de precio.",
+                projTechHeader: "Arquitectura & Tecnologías",
+                projCountriesLabel: "Cobertura Europea",
+                eduSubtitle: "Credenciales Académicas",
+                eduTitle: "Educación, Certificaciones e Idiomas",
+                eduDate: "Septiembre 2017 - Julio 2022",
+                eduDegree: "Grado en Ingeniería Informática",
+                eduHonorsLabel: "Menciones:",
+                eduHonorsText: " Matrícula de Honor en Compiladores y en Estructura y Tecnología de Computadores.",
+                certTitle: "Certificaciones",
+                langTitle: "Idiomas",
+                langEsName: "Español",
+                langEsLevel: "Nativo",
+                langEnName: "Inglés",
+                langEnLevel: "B2 - profesional",
+                toastCopied: "¡Correo salvasauvi@gmail.com copiado!"
+            },
+            en: {
+                navStack: "Tech Stack",
+                navExperience: "Experience",
+                navProjects: "Projects",
+                navEducation: "Education",
+                btnPrint: "Print / Save PDF",
+                heroRole: "Backend Software Engineer",
+                heroLocation: "Alicante (Spain)",
+                heroBio1: "Backend Software Engineer with over 4 years of experience building mission-critical, high-availability systems in the Java (Spring Boot) and .NET (C#, ASP.NET) ecosystems.",
+                heroBio2: "Used to work in environments where code processes over a million transactions daily, I focus on designing clean architectures, automating complex processes, and ensuring production stability through rigorous testing (JUnit, Mockito) and continuous integration.",
+                btnCopyEmail: "Copy Email",
+                btnChangePhoto: "Preview local photo",
+                btnLoadPhotoHint: "Select your photo to preview",
+                btnChangeLogo: "Load logo",
+                metricExp: "Years of Backend Experience",
+                metricTx: "Daily transactions processed",
+                metricOpt: "SQL query response optimization",
+                metricIncidents: "Incidents detected in advance",
+                stackSubtitle: "Architecture & Tooling",
+                stackTitle: "Tech Stack",
+                filterAll: "All",
+                filterData: "Databases / ORM",
+                stackBackendDesc: "High-availability systems & microservices",
+                stackDataTitle: "Databases & Persistence",
+                stackDataDesc: "Relational databases, ORMs and query optimization",
+                stackTestingDesc: "Production stability & rigorous unit testing",
+                stackDevopsDesc: "Continuous integration, containers & code quality",
+                expSubtitle: "Career Path",
+                expTitle: "Professional Experience",
+                exp1Role: "Software Engineer",
+                exp1Date: "October 2022 - July 2026",
+                exp1Bullet1: "Developed and maintained a critical payment platform for the airline sector using Java, ASP.NET, and Informix, supporting a volume of over 1 million daily transactions in microservices architectures.",
+                exp1Bullet2: "Designed and implemented a sales reconciliation module (Java Spring Boot, Hibernate, and SQL Server integrated with a REST API in .NET Framework and Entity Framework under a layered architecture), successfully detecting and fixing accounting discrepancies before bank confirmation.",
+                exp1Bullet3: "Led the technical adaptation of the system to GDPR compliance, creating automated processes for data retention, anonymization, and secure deletion for millions of historical records accumulated over more than 12 years.",
+                exp2Role: "Full Stack Developer",
+                exp2Date: "March 2022 - October 2022",
+                exp2Bullet1: "Developed and maintained critical applications for the healthcare sector using Node.js and Angular, providing stable support to hundreds of concurrent users.",
+                exp2Bullet2: "Automated the continuous monitoring of services using PowerShell scripts, successfully detecting 8 out of 10 incidents in advance before they affected the end user and improving system availability.",
+                exp2Bullet3: "Led the gathering of functional requirements and the presentation of technical demos to the final client, achieving 100% approval of the delivered proposals.",
+                exp3Role: "Software Development Intern",
+                exp3Date: "November 2021 - February 2022",
+                exp3Bullet1: "Optimized complex queries in SQL Server using LINQ and Entity Framework, reducing application response times from 3 seconds to 800 milliseconds.",
+                exp3Bullet2: "Refactored critical backend processes in .NET Core 3, using SonarQube for quality control, improving code maintainability, and reducing the project's technical debt.",
+                exp3Bullet3: "Implemented continuous improvements combining backend development in .NET Core 3, participating in frontend tasks with React JS, and managing deployments with Azure DevOps.",
+                projSubtitle: "In Production",
+                projTitle: "Personal Projects",
+                projDownloads: "200+ active downloads",
+                projRole: "| Creator and Kotlin App Developer",
+                projBtnPlay: "Google Play Link",
+                projBullet1: "Designed and developed a production application for real-time consultation and comparison of fuel prices in Spain, France, Portugal, and Germany (200+ active downloads).",
+                projBullet2: "Implemented automated processes for bulk data ingestion, normalization, and updating from official government APIs and sources across 4 countries on a PostgreSQL relational database.",
+                projBullet3: "Developed a search engine in Kotlin for municipalities and routes with dynamic clustering, algorithmic price calculation by zones, application of personalized discounts, and an automatic alert system for price drops.",
+                projTechHeader: "Architecture & Tech",
+                projCountriesLabel: "European Coverage",
+                eduSubtitle: "Academic Credentials",
+                eduTitle: "Education, Certifications & Languages",
+                eduDate: "September 2017 - July 2022",
+                eduDegree: "Bachelor's Degree in Computer Engineering",
+                eduHonorsLabel: "Honors:",
+                eduHonorsText: " Graduated with Honors (Matrícula de Honor) in Compilers and in Computer Structure and Technology.",
+                certTitle: "Certifications",
+                langTitle: "Languages",
+                langEsName: "Spanish",
+                langEsLevel: "Native",
+                langEnName: "English",
+                langEnLevel: "B2 - Professional",
+                toastCopied: "Email salvasauvi@gmail.com copied!"
+            }
+        };
+
+        let currentLang = 'es';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            // Update button active styles
+            const btnEs = document.getElementById('btn-lang-es');
+            const btnEn = document.getElementById('btn-lang-en');
+
+            if (lang === 'es') {
+                btnEs.className = "px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all bg-white dark:bg-indigo-600 text-slate-900 dark:text-white shadow-sm";
+                btnEn.className = "px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+            } else {
+                btnEn.className = "px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all bg-white dark:bg-indigo-600 text-slate-900 dark:text-white shadow-sm";
+                btnEs.className = "px-2.5 py-1 rounded-md text-xs font-mono font-semibold transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+            }
+        }
+
+        // Theme Toggle Logic
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            htmlEl.classList.toggle('dark');
+        }
+
+        // Tech Stack Interactive Filter
+        function filterStack(category) {
+            const cards = document.querySelectorAll('.stack-card');
+            const buttons = document.querySelectorAll('.stack-filter-btn');
+
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-filter') === category) {
+                    btn.className = "stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-indigo-600 text-white shadow-sm";
+                } else {
+                    btn.className = "stack-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:border-indigo-500";
+                }
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Copy Email to Clipboard with Toast Notification
+        function copyEmail() {
+            const email = "salvasauvi@gmail.com";
+            const tempInput = document.createElement("textarea");
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = translations[currentLang].toastCopied;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Preview uploaded profile image in real-time
+        function previewProfileImage(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('profile-img');
+                img.src = e.target.result;
+                const hint = document.getElementById('photo-upload-hint');
+                if (hint) hint.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Preview uploaded Gasolinapp logo in real-time
+        function previewGasolinappLogo(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('gasolinapp-logo-img');
+                const svgFallback = document.getElementById('gasolinapp-svg-fallback');
+                if (svgFallback) svgFallback.classList.add('hidden');
+                img.src = e.target.result;
+                img.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Initialize Lucide Icons on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
